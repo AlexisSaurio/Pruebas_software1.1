@@ -1,0 +1,114 @@
+
+equivalent partition
+
+1.	Function that checks if a given number is positive, negative, or zero.
+Caso de prueba:
+1.input= 10
+Expected out put = positive
+2.input= -10
+Expected out put = negative
+2.input= 0
+Expected out put = cero
+4.input= 10.2
+Expected out put = positive
+5.input= -10.3
+Expected out put = negative
+
+
+
+
+
+2. Function that validates user passwords.
+The password validation rules are as follows:
+
+The password must be at least 8 characters long.
+The password must contain at least one uppercase letter,
+one lowercase letter, one digit,
+and one special character (!, @, #, $, %, or &).
+
+equivalent partition
+
+1.input =AlexisSaurio12!
+expected out put = valid
+2.input =AlexisSaurio12
+expected out put = invalid no special character
+3.input =AlexisSaurio!
+expected out put = invalid no number
+4.input =alexissaurio12!
+expected out put = invalid no uppercase
+5.input = Alex12!
+expected out put = invalid short string
+6.input =ALEXISSAURIO12!
+expected out put = invalid no lowercase
+7.input =AlexisSaurio12@
+expected out put = valid
+8.input =AlexisSaurio12$
+expected out put = valid
+9.input =AlexisSaurio12%
+expected out put = valid
+10.input =AlexisSaurio12&
+expected out put = valid
+1.input =AlexisSaurio12{}
+expected out put = invalid
+
+
+
+
+
+3. Function that calculates the discount for a customer's purchase based on the total amount.
+The discount rules are as follows:
+
+If the total amount is less than 100, no discount is applied.
+If the total amount is between 100 and 500 (inclusive), a 10% discount is applied.
+If the total amount is greater than 500, a 20% discount is applied.
+
+boundry value analisis
+
+1.input =99
+expected out put = 99
+2.input = 0
+expected out put = 0
+3.input=100
+expected out put = 90
+4.input=500
+expected out = 450
+5.input = 501
+expected out = 499.8
+
+4. Function that processes user orders in an e-commerce system.
+The function calculates the total price of the items in the order,
+applying different discounts based on the quantity of each item.
+The discount rules are as follows:
+
+If the quantity of a single item is between 1 and 5 (inclusive), no discount is applied.
+If the quantity of a single item is between 6 and 10 (inclusive), a 5% discount is applied.
+If the quantity of a single item is greater than 10, a 10% discount is applied.
+
+
+1.input =5
+expected out put = no discount
+2.input = 0
+expected out put = 0
+3.input=6
+expected out put = 5%
+4.input=10
+expected out = 5%
+5.input = 11
+expected out = 10%
+
+
+5. Function that calculates shipping costs for an online shopping system.
+The function calculates shipping costs based on the total weight of the items
+in the order and the shipping method chosen by the customer.
+The shipping cost rules are as follows:
+
+For standard shipping:
+
+If the total weight is less than or equal to 5 kg, the cost is $10.
+If the total weight is between 5 and 10 kg (inclusive), the cost is $15.
+If the total weight is greater than 10 kg, the cost is $20.
+For express shipping:
+
+If the total weight is less than or equal to 5 kg, the cost is $20.
+If the total weight is between 5 and 10 kg (inclusive), the cost is $30.
+If the total weight is greater than 10 kg, the cost is $40.
