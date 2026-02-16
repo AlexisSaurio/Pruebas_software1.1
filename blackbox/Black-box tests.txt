@@ -1,0 +1,150 @@
+Equivalence Partitioning
+
+1. Function that validates credit card numbers.
+   - Valid card numbers: Length between 13 and 16 digits, containing only numeric digits.
+
+1.input = 1234567890123
+expected out put = valid
+2.input = 1234567890123456
+expected out put = valid
+3.input = 123456789012
+expected out put = invalid short string
+4.input = 12345678901234567
+expected out put = invalid long string
+5.input = 123456789012A
+expected out put = invalid non-numeric digits
+
+2. Function that validates dates.
+   - Valid years: Between 1900 and 2100.
+   - Valid months: Between 1 and 12.
+   - Valid days: Between 1 and 31.
+
+1.input = year: 2000, month: 6, day: 15
+expected out put = valid
+2.input = year: 1899, month: 6, day: 15
+expected out put = invalid year out of range
+3.input = year: 2101, month: 6, day: 15
+expected out put = invalid year out of range
+4.input = year: 2000, month: 13, day: 15
+expected out put = invalid month out of range
+5.input = year: 2000, month: 6, day: 32
+expected out put = invalid day out of range
+
+3. Function that checks the eligibility of a passenger to book a flight.
+   - Eligible ages: Between 18 and 65.
+   - Frequent flyers: True or False.
+
+1.input = age: 25, frequent flyer: True
+expected out put = eligible
+2.input = age: 18, frequent flyer: False
+expected out put = eligible
+3.input = age: 17, frequent flyer: True
+expected out put = invalid under age
+4.input = age: 66, frequent flyer: False
+expected out put = invalid over age
+
+4. Function that validates URLs.
+   - Valid URLs: Length less than or equal to 255, starting with "http://" or "https://".
+
+1.input = http://google.com
+expected out put = valid
+2.input = https://mysite.ai
+expected out put = valid
+3.input = ftp://files.com
+expected out put = invalid wrong protocol
+4.input = https://www.contadordecaracteres.com/
+expected out put = invalid long string
+
+
+Boundary Value Analysis
+
+1. Function that calculates the eligibility of a person for a loan based on their income and credit score.
+   The eligibility rules are as follows:
+   - If the income is less than $30,000, the person is not eligible for a loan.
+   - If the income is between $30,000 and $60,000 (inclusive) and the credit score is above 700, the person is eligible for a standard loan.
+   - If the income is between $30,000 and $60,000 (inclusive) and the credit score is below or equal to 700, the person is eligible for a secured loan.
+   - If the income is greater than $60,000 and the credit score is above 750, the person is eligible for a premium loan.
+   - If the income is greater than $60,000 and the credit score is between 700 and 750 (inclusive), the person is eligible for a standard loan.
+
+1.input = income: 29999, credit: 800
+expected out put = not eligible
+2.input = income: 30000, credit: 701
+expected out put = standard loan
+3.input = income: 60000, credit: 700
+expected out put = secured loan
+4.input = income: 60001, credit: 751
+expected out put = premium loan
+5.input = income: 60001, credit: 750
+expected out put = standard loan
+
+2. Function that determines the category of a product in an e-commerce system based on its price.
+   The product categories and pricing rules are as follows:
+   - Category A: Products priced between $10 and $50 (inclusive).
+   - Category B: Products priced between $51 and $100 (inclusive).
+   - Category C: Products priced between $101 and $200 (inclusive).
+   - Category D: Products priced above $200.
+
+1.input = 10
+expected out put = Category A
+2.input = 50
+expected out put = Category A
+3.input = 51
+expected out put = Category B
+4.input = 100
+expected out put = Category B
+5.input = 101
+expected out put = Category C
+6.input = 200
+expected out put = Category C
+7.input = 201
+expected out put = Category D
+
+3. Function that calculates the cost of shipping for packages based on their weight and dimensions.
+   The shipping cost rules are as follows:
+   - If the weight of the package is less than or equal to 1 kg and the dimensions (length, width, and height) are each less than or equal to 10 cm, the cost is $5.
+   - If the weight is between 1 and 5 kg (inclusive) and the dimensions are each between 11 and 30 cm (inclusive), the cost is $10.
+   - If the weight is greater than 5 kg or any of the dimensions is greater than 30 cm, the cost is $20.
+
+1.input = weight: 1, dimensions: 10, 10, 10
+expected out put = $5
+2.input = weight: 1.1, dimensions: 11, 11, 11
+expected out put = $10
+3.input = weight: 5, dimensions: 30, 30, 30
+expected out put = $10
+4.input = weight: 5.1, dimensions: 30, 30, 30
+expected out put = $20
+5.input = weight: 1, dimensions: 31, 10, 10
+expected out put = $20
+
+
+Decision Table
+
+1. Create the decision table for a system that provides weather advisories based on temperature and humidity.
+   The rules are:
+   - Weather recommendation "High temperature and humidity. Stay hydrated." for temperature > 30 and humidity > 70.
+   - Weather recommendation "Low temperature. Don't forget your jacket!" for temperature < 0 and any humidity.
+   - No weather recommendation for any other temperature and humidity combination.
+
+1.input = temp: 31, hum: 71
+expected out put = High temperature and humidity. Stay hydrated.
+2.input = temp: -1, hum: 50
+expected out put = Low temperature. Don't forget your jacket!
+3.input = temp: 25, hum: 80
+expected out put = No recommendation
+4.input = temp: 31, hum: 60
+expected out put = No recommendation
+
+2. Create the decision table for a system that authenticates users based on their username and password.
+   The rules are:
+   - Returns "Admin" for username "admin" and password "admin123".
+   - Returns "User" for any other username with at least 5 characters and password with at least 8 characters.
+   - Returns "Invalid" if the username or password lenghts are not met.
+
+1.input = user: "admin", pass: "admin123"
+expected out put = Admin
+2.input = user: "Alexis", pass: "Password123"
+expected out put = User
+3.input = user: "adm", pass: "admin123"
+expected out put = Invalid short username
+4.input = user: "admin", pass: "123"
+expected out put = Invalid short password
