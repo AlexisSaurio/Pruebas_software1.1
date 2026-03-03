@@ -4,7 +4,11 @@ White-box unit testing examples.
 """
 import unittest
 
-from class_exercises import (check_number_status,validate_password,calculate_total_discount,calculate_order_total,calculate_items_shipping_cost,validate_login,verify_age,categorize_product,validate_email,celsius_to_fahrenheit,validate_credit_card,validate_date,check_flight_eligibility,validate_url,calculate_quantity_discount,check_file_size,check_loan_eligibility,calculate_shipping_cost,grade_quiz,authenticate_user,get_weather_advisory,
+from class_exercises import (check_number_status,validate_password,
+calculate_total_discount,calculate_order_total,calculate_items_shipping_cost,
+validate_login,verify_age,categorize_product,validate_email,celsius_to_fahrenheit,validate_credit_card,validate_date,
+check_flight_eligibility,validate_url,calculate_quantity_discount,check_file_size,check_loan_eligibility,calculate_shipping_cost,
+grade_quiz,authenticate_user,get_weather_advisory,VendingMachine,UserAuthentication,TrafficLight,DocumentEditingSystem,ElevatorSystem
 )
 
 
@@ -510,6 +514,178 @@ class TestWhiteBox(unittest.TestCase):
 
     def test_weather_low_temp_high_humidity_low_wins(self):
         self.assertEqual(get_weather_advisory(-10, 90), "Low Temperature. Bundle Up!")
+
+
+# EJERCICIO 22 
+class TestWhiteBoxVendingMachine(unittest.TestCase):
+    """Pruebas de caja blanca asegurando cobertura de ramas para VendingMachine."""
+
+    def setUp(self):
+        self.machine = VendingMachine()
+
+    def test_branch_insert_coin_success(self):
+        """Evalúa la rama if self.state == 'Ready'."""
+        result = self.machine.insert_coin()
+        self.assertEqual(result, "Coin Inserted. Select your drink.")
+        self.assertEqual(self.machine.state, "Dispensing")
+
+    def test_branch_insert_coin_fail(self):
+        """Evalúa el retorno por defecto cuando state no es 'Ready'."""
+        self.machine.state = "Dispensing" # Forzamos el estado
+        result = self.machine.insert_coin()
+        self.assertEqual(result, "Invalid operation in current state.")
+
+    def test_branch_select_drink_success(self):
+        """Evalúa la rama if self.state == 'Dispensing'."""
+        self.machine.state = "Dispensing"
+        result = self.machine.select_drink()
+        self.assertEqual(result, "Drink Dispensed. Thank you!")
+        self.assertEqual(self.machine.state, "Ready")
+
+    def test_branch_select_drink_fail(self):
+        """Evalúa el retorno por defecto cuando state no es 'Dispensing'."""
+        # El estado inicial ya es "Ready"
+        result = self.machine.select_drink()
+        self.assertEqual(result, "Invalid operation in current state.")
+
+
+# EJERCICIO 23 
+class TestWhiteBoxTrafficLight(unittest.TestCase):
+    """Pruebas de caja blanca asegurando cobertura de todos los if/elif para TrafficLight."""
+
+    def setUp(self):
+        self.light = TrafficLight()
+
+    def test_branch_red_to_green(self):
+        """Evalúa la rama if self.state == 'Red'."""
+        self.light.state = "Red"
+        self.light.change_state()
+        self.assertEqual(self.light.get_current_state(), "Green")
+
+    def test_branch_green_to_yellow(self):
+        """Evalúa la rama elif self.state == 'Green'."""
+        self.light.state = "Green"
+        self.light.change_state()
+        self.assertEqual(self.light.get_current_state(), "Yellow")
+
+    def test_branch_yellow_to_red(self):
+        """Evalúa la rama elif self.state == 'Yellow'."""
+        self.light.state = "Yellow"
+        self.light.change_state()
+        self.assertEqual(self.light.get_current_state(), "Red")
+
+
+# EJERCICIO 24 
+class TestWhiteBoxUserAuthentication(unittest.TestCase):
+    """Pruebas de caja blanca para estados de Login y Logout."""
+
+    def setUp(self):
+        self.auth = UserAuthentication()
+
+    def test_branch_login_when_logged_out(self):
+        """Evalúa la entrada al if de login (camino exitoso)."""
+        result = self.auth.login()
+        self.assertEqual(result, "Login successful")
+        self.assertEqual(self.auth.state, "Logged In")
+
+    def test_branch_login_when_logged_in(self):
+        """Evalúa el rechazo del login (salto del if)."""
+        self.auth.state = "Logged In"
+        result = self.auth.login()
+        self.assertEqual(result, "Invalid operation in current state")
+
+    def test_branch_logout_when_logged_in(self):
+        """Evalúa la entrada al if de logout (camino exitoso)."""
+        self.auth.state = "Logged In"
+        result = self.auth.logout()
+        self.assertEqual(result, "Logout successful")
+        self.assertEqual(self.auth.state, "Logged Out")
+
+    def test_branch_logout_when_logged_out(self):
+        """Evalúa el rechazo del logout (salto del if)."""
+        result = self.auth.logout()
+        self.assertEqual(result, "Invalid operation in current state")
+
+
+# EJERCICIO 25 
+class TestWhiteBoxDocumentEditingSystem(unittest.TestCase):
+    """Pruebas de caja blanca evaluando transiciones de DocumentEditingSystem."""
+
+    def setUp(self):
+        self.doc_system = DocumentEditingSystem()
+
+    def test_branch_save_document_success(self):
+        """Evalúa guardar documento desde estado Editing."""
+        result = self.doc_system.save_document()
+        self.assertEqual(result, "Document saved successfully")
+        self.assertEqual(self.doc_system.state, "Saved")
+
+    def test_branch_save_document_fail(self):
+        """Evalúa intentar guardar cuando ya está Saved."""
+        self.doc_system.state = "Saved"
+        result = self.doc_system.save_document()
+        self.assertEqual(result, "Invalid operation in current state")
+
+    def test_branch_edit_document_success(self):
+        """Evalúa editar documento desde estado Saved."""
+        self.doc_system.state = "Saved"
+        result = self.doc_system.edit_document()
+        self.assertEqual(result, "Editing resumed")
+        self.assertEqual(self.doc_system.state, "Editing")
+
+    def test_branch_edit_document_fail(self):
+        """Evalúa intentar editar cuando ya está en Editing."""
+        result = self.doc_system.edit_document()
+        self.assertEqual(result, "Invalid operation in current state")
+
+
+# EJERCICIO 26 
+class TestWhiteBoxElevatorSystem(unittest.TestCase):
+    """Pruebas de caja blanca para los condicionales del Elevador."""
+
+    def setUp(self):
+        self.elevator = ElevatorSystem()
+
+    def test_branch_move_up_from_idle(self):
+        """Evalúa el if al mover hacia arriba correctamente."""
+        result = self.elevator.move_up()
+        self.assertEqual(result, "Elevator moving up")
+        self.assertEqual(self.elevator.state, "Moving Up")
+
+    def test_branch_move_up_when_moving(self):
+        """Evalúa el salto del if en move_up."""
+        self.elevator.state = "Moving Down"
+        result = self.elevator.move_up()
+        self.assertEqual(result, "Invalid operation in current state")
+
+    def test_branch_move_down_from_idle(self):
+        """Evalúa el if al mover hacia abajo correctamente."""
+        result = self.elevator.move_down()
+        self.assertEqual(result, "Elevator moving down")
+        self.assertEqual(self.elevator.state, "Moving Down")
+
+    def test_branch_move_down_when_moving(self):
+        """Evalúa el salto del if en move_down."""
+        self.elevator.state = "Moving Up"
+        result = self.elevator.move_down()
+        self.assertEqual(result, "Invalid operation in current state")
+
+    def test_branch_stop_from_moving_up(self):
+        """Evalúa primera condición del array en stop() ['Moving Up']."""
+        self.elevator.state = "Moving Up"
+        result = self.elevator.stop()
+        self.assertEqual(result, "Elevator stopped")
+
+    def test_branch_stop_from_moving_down(self):
+        """Evalúa segunda condición del array en stop() ['Moving Down']."""
+        self.elevator.state = "Moving Down"
+        result = self.elevator.stop()
+        self.assertEqual(result, "Elevator stopped")
+
+    def test_branch_stop_when_idle(self):
+        """Evalúa falla al detener cuando ya está Idle."""
+        result = self.elevator.stop()
+        self.assertEqual(result, "Invalid operation in current state")
 
 
     
