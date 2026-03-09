@@ -3,12 +3,14 @@
 White-box unit testing examples.
 """
 import unittest
+from unittest.mock import MagicMock, patch
 
 from class_exercises import (check_number_status,validate_password,
 calculate_total_discount,calculate_order_total,calculate_items_shipping_cost,
 validate_login,verify_age,categorize_product,validate_email,celsius_to_fahrenheit,validate_credit_card,validate_date,
 check_flight_eligibility,validate_url,calculate_quantity_discount,check_file_size,check_loan_eligibility,calculate_shipping_cost,
 grade_quiz,authenticate_user,get_weather_advisory,VendingMachine,UserAuthentication,TrafficLight,DocumentEditingSystem,ElevatorSystem
+,ShoppingCart,BankingSystem
 )
 
 
@@ -687,6 +689,86 @@ class TestWhiteBoxElevatorSystem(unittest.TestCase):
         result = self.elevator.stop()
         self.assertEqual(result, "Invalid operation in current state")
 
+
+
+class TestBankingSystem(unittest.TestCase):
+    def setUp(self):
+        self.system = BankingSystem()
+        self.username = "user123"
+        self.password = "pass123"
+
+    def test_authenticate_success(self):
+        result = self.system.authenticate(self.username, self.password)
+        self.assertTrue(result)
+        self.assertIn(self.username, self.system.logged_in_users)
+
+    def test_transfer_money_unauthenticated(self):
+        result = self.system.transfer_money("user123", "user456", 100, "regular")
+        self.assertFalse(result)
+
+    @patch('__main__.BankAccount') 
+    def test_transfer_money_insufficient_funds(self, mock_bank_class):
+        self.system.logged_in_users.add(self.username)
+        
+        mock_instance = mock_bank_class.return_value
+        mock_instance.balance = 10 
+        
+        result = self.system.transfer_money(self.username, "receiver", 100, "regular")
+        
+        self.assertFalse(result)
+        mock_bank_class.assert_called_with(self.username, 1000)
+
+    @patch('__main__.BankAccount')
+    def test_transfer_money_express_success(self, mock_bank_class):
+        self.system.logged_in_users.add(self.username)
+        
+        mock_instance = mock_bank_class.return_value
+        mock_instance.balance = 5000
+        
+        result = self.system.transfer_money(self.username, "receiver", 100, "express")
+        
+        self.assertTrue(result)
+
+
+
+class TestShoppingCart(unittest.TestCase):
+    def setUp(self):
+        self.cart = ShoppingCart()
+        self.mock_p1 = MagicMock()
+        self.mock_p1.name = "Laptop"
+        self.mock_p1.price = 1000
+
+        self.mock_p2 = MagicMock()
+        self.mock_p2.name = "Mouse"
+        self.mock_p2.price = 50
+
+    def test_add_product_new_and_existing(self):
+        self.cart.add_product(self.mock_p1, 1)
+        self.assertEqual(len(self.cart.items), 1)
+        
+        self.cart.add_product(self.mock_p1, 2) 
+        self.assertEqual(self.cart.items[0]["quantity"], 3)
+
+    def test_remove_product_partial(self):
+        self.cart.add_product(self.mock_p2, 5)
+        self.cart.remove_product(self.mock_p2, 2)
+        
+        self.assertEqual(self.cart.items[0]["quantity"], 3)
+
+    def test_remove_product_complete(self):
+        self.cart.add_product(self.mock_p2, 1)
+        self.cart.remove_product(self.mock_p2, 1)
+        
+        self.assertEqual(len(self.cart.items), 0)
+
+    def test_checkout_calculation(self):
+        self.cart.add_product(self.mock_p1, 1) 
+        self.cart.add_product(self.mock_p2, 2) 
+        
+        
+        with patch('builtins.print') as mock_print:
+            self.cart.checkout()
+            mock_print.assert_any_call("Total: $1100")
 
     
 if __name__ == '__main__':
